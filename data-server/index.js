@@ -14,7 +14,13 @@ app.get('/people', (req, res) => {
 });
 
 app.get('/people/:id', (req, res) => {
-  res.send(_.find(people, i => i.id === req.params.id));
+  let personData = _.find(people, i => i.id === req.params.id);
+  if (!personData) {
+    res.statusCode = 404;
+    res.send({ error: 'Person not found' });
+  } else {
+    res.send(personData);
+  }
 });
 
 
