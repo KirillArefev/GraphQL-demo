@@ -1,0 +1,14 @@
+{
+  "mongoose": {
+    "uri": "mongodb://localhost/hiringTool",
+    "debug": false,
+    "options": {
+      "server": {
+        "socketOptions": {
+          "keepAlive": 1
+        },
+        "poolSize": 10
+      }
+    }
+  }
+}

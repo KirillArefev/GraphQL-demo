@@ -2,8 +2,19 @@ import {
   GraphQLSchema,
   GraphQLObjectType,
   GraphQLString,
-  GraphQLList
+  GraphQLList,
+  GraphQLInt,
+  GraphQLBoolean
 } from 'graphql';
+import Test from './data-server/mongoose/TestSchemaM';
+
+let getAllTests = () => {
+    return new Promise((resolve, reject) => {
+      Test.find({}).exec((err, res) => {
+        err ? reject(err) : resolve(res);
+      });
+    });
+};
 
 const PersonType = new GraphQLObjectType({
   name: 'Person',
@@ -27,6 +38,20 @@ const PersonType = new GraphQLObjectType({
   })
 });
 
+const TestType = new GraphQLObjectType({
+  name: 'Test',
+  description: '...',
+  fields: () => ({
+    link: { type: GraphQLString },
+    title: { type: GraphQLString },
+    titleForUser: { type: GraphQLString },
+    currentQuestion: { type: GraphQLInt },
+    neededRatio: { type: GraphQLInt },
+    ratio: { type: GraphQLInt },
+    passed: { type: GraphQLBoolean }
+  })
+});
+
 const QueryType = new GraphQLObjectType({
   name: 'Query',
   description: '...',
@@ -37,6 +62,10 @@ const QueryType = new GraphQLObjectType({
         id: { type: GraphQLString }
       },
       resolve: (root, args, {loaders}) => loaders.person.load(args.id)
+    },
+    tests: {
+      type: new GraphQLList(TestType),
+      resolve: getAllTests
     }
   })
 });
