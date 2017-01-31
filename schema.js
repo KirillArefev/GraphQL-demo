@@ -42,6 +42,7 @@ const TestType = new GraphQLObjectType({
   name: 'Test',
   description: '...',
   fields: () => ({
+    id: { type: GraphQLString },
     link: { type: GraphQLString },
     title: { type: GraphQLString },
     titleForUser: { type: GraphQLString },
