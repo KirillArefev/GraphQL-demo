@@ -4,7 +4,7 @@ import schema from './schema';
 import fetch from 'node-fetch';
 import DataLoader from 'dataloader';
 
-const BASE_URL = 'http://localhost:1237';
+export const BASE_URL = 'http://localhost:1237';
 
 const getPersonById = (id) =>
   fetch(`${BASE_URL}/people/${id}/`)

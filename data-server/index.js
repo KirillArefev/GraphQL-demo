@@ -23,5 +23,15 @@ app.get('/people/:id', (req, res) => {
   }
 });
 
+app.post('/people', (req, res) => {
+  let data = req.body;
+  data.first_name = data.firstName;
+  delete data.firstName;
+  data.last_name = data.lastName;
+  delete data.lastName;
+  console.log(data);
+  res.send(data);
+})
+
 
 app.listen(1237, () => console.log('REST server is running on port 1237'));

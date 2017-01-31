@@ -6,6 +6,8 @@ import {
   GraphQLInt,
   GraphQLBoolean
 } from 'graphql';
+import fetch from 'node-fetch';
+import { BASE_URL } from './index';
 import Test from './data-server/mongoose/TestSchemaM';
 
 let getAllTests = () => {
@@ -15,6 +17,12 @@ let getAllTests = () => {
       });
     });
 };
+
+let addPerson = (personFields) => fetch(
+    `${BASE_URL}/people`,
+    { method: 'POST', body: JSON.stringify(personFields),
+    headers: { 'Content-Type': 'application/json' }
+  }).then(res => res.json());
 
 const PersonType = new GraphQLObjectType({
   name: 'Person',
@@ -71,6 +79,25 @@ const QueryType = new GraphQLObjectType({
   })
 });
 
+const MutationType = new GraphQLObjectType({
+  name: 'Mutation',
+  description: '...',
+  fields: () => ({
+    addPerson: {
+      type: PersonType,
+      description: 'Add a person',
+      args: {
+        firstName: { type: GraphQLString },
+        lastName: { type: GraphQLString },
+        userName: { type: GraphQLString },
+        email: { type: GraphQLString }
+      },
+      resolve: (value, args) => addPerson(args)
+    }
+  })
+});
+
 export default new GraphQLSchema({
-  query: QueryType
+  query: QueryType,
+  mutation: MutationType
 });
