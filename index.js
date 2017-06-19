@@ -1,8 +1,8 @@
 import express from 'express';
 import graphQLHTTP from 'express-graphql';
-import schema from './schema';
+import schema from './schema1';
 import fetch from 'node-fetch';
-import DataLoader from 'dataloader';
+import { makeExecutableSchema } from 'graphql-tools';
 
 export const BASE_URL = 'http://localhost:1237';
 
@@ -10,21 +10,29 @@ const getPersonById = (id) =>
   fetch(`${BASE_URL}/people/${id}/`)
     .then(res => res.json());
 
+const root = {
+  person: ({id}) => getPersonById(id)
+};
+const resolvers = {
+  Person: {
+    firstName: person => person.first_name,
+    lastName: person => person.last_name,
+    friends: person => person.friends.map(getPersonById)
+  }
+};
+
+const executableSchema = makeExecutableSchema({
+  typeDefs: schema,
+  resolvers
+});
+
 const app = express();
 
 app.use(graphQLHTTP(req => {
-  const personLoader = new DataLoader(
-    keys => Promise.all( keys.map( getPersonById ) )
-  );
-
-  const loaders = {
-    person: personLoader
-  };
-
   return {
-    context: {loaders},
     graphiql: true,
-    schema
+    rootValue: root,
+    schema: executableSchema
   };
 }));
 
