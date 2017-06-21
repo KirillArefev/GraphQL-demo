@@ -11,6 +11,10 @@ type Query {
     person(id: String!): Person
 }
 
+type Mutation {
+    addPerson: Person
+}
+
 type schema {
     query: Query
     mutation: Mutation

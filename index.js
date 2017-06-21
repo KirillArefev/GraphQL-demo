@@ -1,6 +1,6 @@
+import fs from 'fs';
 import express from 'express';
 import graphQLHTTP from 'express-graphql';
-import schema from './schema1';
 import fetch from 'node-fetch';
 import { makeExecutableSchema } from 'graphql-tools';
 
@@ -21,19 +21,27 @@ const resolvers = {
   }
 };
 
-const executableSchema = makeExecutableSchema({
-  typeDefs: schema,
-  resolvers
+fs.readFile('types.graphqls', 'utf-8', (err, data) => {
+  if (err) {
+    console.log(err);
+    return;
+  }
+
+  const executableSchema = makeExecutableSchema({
+    typeDefs: data,
+    resolvers
+  });
+
+  const app = express();
+
+  app.use(graphQLHTTP(req => {
+    return {
+      graphiql: true,
+      rootValue: root,
+      schema: executableSchema
+    };
+  }));
+
+  app.listen(3000, () => { console.log('GraphQL server starter on port 3000'); });
 });
 
-const app = express();
-
-app.use(graphQLHTTP(req => {
-  return {
-    graphiql: true,
-    rootValue: root,
-    schema: executableSchema
-  };
-}));
-
-app.listen(3000, () => { console.log('GraphQL server starter on port 3000'); });
