@@ -4,6 +4,7 @@ import {
   GraphQLString,
   GraphQLList,
   GraphQLInt,
+  GraphQLFloat,
   GraphQLBoolean
 } from 'graphql';
 import Test from './data-server/mongoose/TestSchemaM';
@@ -47,8 +48,8 @@ const TestType = new GraphQLObjectType({
     title: { type: GraphQLString },
     titleForUser: { type: GraphQLString },
     currentQuestion: { type: GraphQLInt },
-    neededRatio: { type: GraphQLInt },
-    ratio: { type: GraphQLInt },
+    neededRatio: { type: GraphQLFloat },
+    ratio: { type: GraphQLFloat },
     passed: { type: GraphQLBoolean }
   })
 });
